@@ -18,6 +18,12 @@ Simple config docker for php 7, nginx, magento 1.9.x and magento 2.2.x, 2.3.x
 ##### Note:
 - Start: run command 1 - 5 - 3
 - Stop: run command 4 - 2
+- mysql server name: mysql
+- mysql username: magento
+- mysql password: magento
+- mysql database name: magento
+- nginx hostname: localhost
+- nginx port: 80
 
 ##### Refer:
 - https://medium.com/@uv_d/migrating-our-php-applications-to-docker-without-sacrificing-performance-1a69d81dcafb

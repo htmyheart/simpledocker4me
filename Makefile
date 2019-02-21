@@ -19,3 +19,29 @@ restore:
 
 go_run:
 	docker exec -it $(container_web_name) /bin/bash
+
+chmod:
+	@echo "Update permission"
+	@sudo chmod -R 777 ./
+
+upg:
+	@echo "bin/magento Setup Upgrade"
+	php bin/magento setup:upgrade
+
+dp:
+	@echo "bin/magento Deploy"
+	php bin/magento setup:static-content:deploy -f
+
+ri:
+	@echo "bin/magento Reindex"
+	php bin/magento indexer:reindex
+
+cf:
+	@echo "bin/magento Flush cache"
+	php bin/magento cache:flush
+
+composer:
+	php composer.phar $(cm)
+	
+m_all: upg dp ri cf chmod
+	@echo "-----------------------"; echo "Done !!!";
