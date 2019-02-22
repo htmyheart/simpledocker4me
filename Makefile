@@ -15,7 +15,7 @@ backup:
 
 restore:
 	@echo "Restore database"
-	@cat backup.sql | docker exec -i $(container_mysql_name) /usr/bin/mysql -u root --password=root magento
+	@docker exec -i $(container_mysql_name) /usr/bin/mysql -u root --password=root magento < backup.sql
 
 go_run:
 	docker exec -it $(container_web_name) /bin/bash
@@ -26,19 +26,22 @@ chmod:
 
 upg:
 	@echo "bin/magento Setup Upgrade"
-	php bin/magento setup:upgrade
+	#php bin/magento setup:upgrade
+	docker exec $(container_web_name) /var/www/public/bin/magento setup:upgrade
 
 dp:
 	@echo "bin/magento Deploy"
-	php bin/magento setup:static-content:deploy -f
+	#php bin/magento setup:static-content:deploy -f
+	docker exec $(container_web_name) /var/www/public/bin/magento setup:static-content:deploy -f
 
 ri:
 	@echo "bin/magento Reindex"
-	php bin/magento indexer:reindex
+	#php bin/magento indexer:reindex
 
 cf:
 	@echo "bin/magento Flush cache"
-	php bin/magento cache:flush
+	#php bin/magento cache:flush
+	docker exec $(container_web_name) /var/www/public/bin/magento c:f
 
 composer:
 	php composer.phar $(cm)
