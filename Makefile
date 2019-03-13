@@ -4,10 +4,13 @@ export
 up:
 	@docker-compose up -d
 	@echo "Custom php-fpm + nginx Up"
+stop:
+	@docker-compose stop
+	@echo "Custom php-fpm + nginx Stop"
 
-down:
+snd:
 	@docker-compose down
-	@echo "Custom php-fpm + nginx Down"
+	@echo "Custom php-fpm + nginx Stop and Down (stop and remove all container data - becaful)"
 
 backup:
 	@echo "Backup database"
@@ -15,7 +18,7 @@ backup:
 
 restore:
 	@echo "Restore database"
-	@docker exec -i $(container_mysql_name) /usr/bin/mysql -u root --password=root magento < backup.sql
+	@cat backup.sql | docker exec -i $(container_mysql_name) /usr/bin/mysql -u root --password=root magento
 
 go_run:
 	docker exec -it $(container_web_name) /bin/bash
@@ -25,23 +28,33 @@ chmod:
 	@sudo chmod -R 777 ./
 
 upg:
-	@echo "bin/magento Setup Upgrade"
+	@echo "Setup Upgrade"
 	#php bin/magento setup:upgrade
 	docker exec $(container_web_name) /var/www/public/bin/magento setup:upgrade
 
-dp:
-	@echo "bin/magento Deploy"
+dp: cf
+	@echo "Deploy"
 	#php bin/magento setup:static-content:deploy -f
+	docker exec $(container_web_name) rm -rf /var/www/public/pub/static/frontend/*
+	docker exec $(container_web_name) rm -rf /var/www/public/pub/static/adminhtml/*
+	docker exec $(container_web_name) rm -rf /var/www/public/var/view_preprocessed/*
+	docker exec $(container_web_name) rm -rf /var/www/public/var/page_cache/*
 	docker exec $(container_web_name) /var/www/public/bin/magento setup:static-content:deploy -f
 
 ri:
-	@echo "bin/magento Reindex"
+	@echo "Reindex"
 	#php bin/magento indexer:reindex
+	docker exec $(container_web_name) /var/www/public/bin/magento indexer:reindex
 
 cf:
-	@echo "bin/magento Flush cache"
+	@echo "Flush cache"
 	#php bin/magento cache:flush
 	docker exec $(container_web_name) /var/www/public/bin/magento c:f
+
+di:
+	@echo "Compile"
+	#php bin/magento setup:di:compile
+	docker exec $(container_web_name) /var/www/public/bin/magento setup:di:compile
 
 composer:
 	php composer.phar $(cm)
