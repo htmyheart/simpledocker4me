@@ -25,7 +25,7 @@ go_run:
 
 chmod:
 	@echo "Update permission"
-	@sudo chmod -R 777 ./
+	@sudo chmod -R 777 ./ #find . -type f -exec chmod -c 644 {} \; && sudo find . -type d -exec chmod -c 755 {} \;
 
 upg:
 	@echo "Setup Upgrade"

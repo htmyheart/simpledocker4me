@@ -9,16 +9,16 @@ services:
       - "80:80"
     volumes:
       - "./custom-fpm/nginxconfig:/etc/nginx/nginxconfig"
-#      - "./custom-fpm/nginx.conf:/etc/nginx/nginx.conf"
-#      - "./custom-fpm/nginx-m1.conf:/etc/nginx/nginx.conf"
-      - "./custom-fpm/nginx-m2.conf:/etc/nginx/nginx.conf"
+#      - "./custom-fpm/nginx.conf:/etc/nginx/nginx.conf" # config nginx for php
+#      - "./custom-fpm/nginx-m1.conf:/etc/nginx/nginx.conf" # config nginx for magento 1
+      - "./custom-fpm/nginx-m2.conf:/etc/nginx/nginx.conf" # config nginx for magento 2
       - "./custom-fpm/php.ini:/etc/php/7.1/fpm/php.ini"
       - "./custom-fpm/phpmyadmin:/var/www/public/phpmyadmin"
       - "./custom-fpm/log:/var/log/nginx"
       - "./magento:/var/www/public"
   mysql:
     container_name: ${container_mysql_name}
-    image: mariadb:10.2 # or mysql:5.7
+    image: mariadb:10.2
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=magento
